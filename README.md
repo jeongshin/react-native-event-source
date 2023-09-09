@@ -5,17 +5,26 @@ Server sent events handling for react native apps
 ## Installation
 
 ```sh
+yarn add react-native-event-source
 npm install react-native-event-source
+```
+
+### Android
+
+add below on `android/app/build.gradle`
+
+```gradle
+dependencies {
+    // ...etc
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    implementation 'com.squareup.okhttp3:okhttp-sse:4.11.0'
+}
 ```
 
 ## Usage
 
 ```js
-import { multiply } from 'react-native-event-source';
 
-// ...
-
-const result = await multiply(3, 7);
 ```
 
 ## Contributing
