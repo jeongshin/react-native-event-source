@@ -56,6 +56,9 @@ class EventSourceModule(reactContext: ReactApplicationContext) :
 
     var method = if (options.hasKey("method")) options.getString("method") else "GET"
 
+    println("[react-native-event-source] method $method");
+    println("[react-native-event-source] headers $headers")
+
     if (method == "POST") {
       // request.post(RequestBody.)
     } else if (method == "GET")  {
@@ -94,7 +97,7 @@ class EventSourceModule(reactContext: ReactApplicationContext) :
       }
     }
 
-    this.eventSource = EventSources.createFactory(sseClient).newEventSource(request.build(), listeners)
+    // this.eventSource = EventSources.createFactory(sseClient).newEventSource(requiest.build(), listeners)
 
     // this.eventSource.request()
   }
