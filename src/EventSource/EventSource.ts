@@ -64,7 +64,7 @@ class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
     nativeEvents.forEach((nativeEvent) => {
       this.eventEmitter.addListener(nativeEvent, (event) => {
         this.listeners[nativeEvent].forEach((listener) => {
-          listener({ type: nativeEvent, data: event.data, error: event.error });
+          listener(event);
         });
       });
     });

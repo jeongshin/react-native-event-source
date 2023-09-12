@@ -119,7 +119,7 @@ class EventSourceModule(reactContext: ReactApplicationContext) :
           val params: WritableMap = Arguments.createMap().apply {
             putInt("statusCode", response.code)
             putString("message", response.message)
-            putString("error", response.body?.string() ?: "{}")
+            putString("data", response.body?.string() ?: "{}")
           }
 
           this@EventSourceModule.sendError(params)

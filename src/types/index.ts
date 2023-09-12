@@ -51,7 +51,9 @@ export interface CloseEvent extends EventBase {
  */
 export interface ErrorEvent extends EventBase {
   type: 'error';
-  error: string;
+  data: string;
+  message: string;
+  statusCode: number;
 }
 
 /**

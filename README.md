@@ -1,11 +1,24 @@
 # react-native-event-source
 
-Server sent events handling for react native apps
+Server sent events handling for react native apps using native libraries
+
+Android - [okhttp sse](https://github.com/square/okhttp)
+
+iOS - [swift eventsource](https://github.com/launchdarkly/swift-eventsource)
+
+## WIP 🏗️
+
+- [ ] Testing
+- [ ] Android
+- [ ] iOS
 
 ## Installation
 
 ```sh
+// using yarn
 yarn add react-native-event-source
+
+// using npm
 npm install react-native-event-source
 ```
 

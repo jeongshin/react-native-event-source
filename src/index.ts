@@ -1,3 +1,3 @@
-import EventSource from './EventSource/EventSourceBase';
+import EventSource from './EventSource/EventSource';
 
 export default EventSource;
