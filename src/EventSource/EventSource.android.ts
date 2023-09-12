@@ -1,6 +1,6 @@
-import EventSource from './EventSource';
+import EventSource from './EventSourceBase';
 
-class EventSourceAndroid extends EventSource<any> {
+class EventSourceAndroid extends EventSource {
   public emit() {
     //
   }

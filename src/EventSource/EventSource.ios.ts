@@ -1,6 +1,6 @@
-import EventSource from './EventSource';
+import EventSource from './EventSourceBase';
 
-class EventSourceIOS extends EventSource<any> {
+class EventSourceIOS extends EventSource {
   public emit() {
     //
   }

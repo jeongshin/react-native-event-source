@@ -98,6 +98,7 @@ dependencies {
 
   implementation 'com.squareup.okhttp3:okhttp:4.11.0'
   implementation 'com.squareup.okhttp3:okhttp-sse:4.11.0'
+  testImplementation 'com.squareup.okhttp3:okhttp-sse:4.11.0'
 
   // FIXME: Dev
   implementation "com.facebook.react:react-android:0.71.3"
