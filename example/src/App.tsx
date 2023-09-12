@@ -4,24 +4,47 @@ import { StyleSheet, View, Text } from 'react-native';
 import EventSource from 'react-native-event-source';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
+  const es = React.useRef<EventSource | null>(null);
+
+  const [result, setResult] = React.useState<string>('');
 
   React.useEffect(() => {
-    const es = new EventSource(
-      'https://3722-2a09-bac5-4734-155-00-22-82.ngrok.io/stream',
+    es.current = new EventSource(
+      'https://4f9b-175-113-78-217.ngrok.io/stream/timeout',
       {
-        //
-      }
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer hello`,
+        },
+        body: JSON.stringify({
+          message: '안녕',
+        }),
+        debug: true,
+        timeout: 5 * 1000,
+      },
+      {}
     );
 
-    es.addEventListener('open', (e) => {
+    es.current.addEventListener('open', (e) => {
       console.log(e);
     });
 
-    es.addEventListener('message', (e) => {
-      console.log(e);
+    es.current.addEventListener('message', (e) => {
+      const data = JSON.parse(e.data);
+      console.log(data, new Date().getTime());
+      if ('chunk' in data) {
+        setResult((p) => p + data.chunk);
+      }
+
+      if ('end' in data) {
+        es.current?.disconnect();
+      }
     });
-    // multiply(3, 7).then(setResult);
+
+    es.current.addEventListener('error', (e) => {
+      console.log(e);
+      es.current?.disconnect();
+    });
   }, []);
 
   return (

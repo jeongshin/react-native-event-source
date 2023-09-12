@@ -3,6 +3,7 @@ export type EventSourceEventType =
   | 'close'
   | 'error'
   | 'message'
+  | 'timeout'
   | 'suspend';
 
 export type EventCallback = (data: EventSourceEvent) => void;
@@ -22,7 +23,6 @@ export type EventSourceEvent =
 export interface MessageEvent extends EventBase {
   type: 'message';
   data: string;
-  url: string;
 }
 
 /**
@@ -51,7 +51,7 @@ export interface CloseEvent extends EventBase {
  */
 export interface ErrorEvent extends EventBase {
   type: 'error';
-  data: string;
+  error: string;
 }
 
 /**
@@ -73,10 +73,10 @@ export type EventSourceHttpOptions = {
   headers?: Record<string, string>;
   body?: string;
   timeout?: number;
+  debug?: boolean;
 };
 
 export type EventSourceStreamOptions = {
-  debug?: boolean;
   speed?: number;
   suspendThresholds?: number;
   shouldMergeSameEvent?: boolean;

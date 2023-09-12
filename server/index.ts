@@ -41,13 +41,31 @@ app.get('/stream', (req, res) => {
   from(messages)
     .pipe(concatMap((x) => of(x).pipe(delay(500))))
     .subscribe((message) => {
-      res.write(`data: ${JSON.stringify({ message })}\n\n`);
+      res.write(`data: ${JSON.stringify({ chunk: message })}\n\n`);
 
       if (messages.findIndex((x) => x === message) === messages.length - 1) {
         res.write(`data: ${JSON.stringify({ end: '[DONE]' })}\n\n`);
       }
     });
 
+  req.on('close', () => {
+    console.log('closed connection from client');
+  });
+});
+
+app.get('/stream/timeout', () => {
+  // DO NOTHING
+});
+
+app.post('*', function (req, res) {
+  res.status(404).json({ message: 'error' });
+  req.on('close', () => {
+    console.log('closed connection from client');
+  });
+});
+
+app.get('*', function (req, res) {
+  res.status(404).json({ message: 'error' });
   req.on('close', () => {
     console.log('closed connection from client');
   });

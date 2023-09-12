@@ -1,5 +1,7 @@
 import type { EmitterSubscription, NativeModule } from 'react-native';
+
 import { NativeEventEmitter, NativeModules, Platform } from 'react-native';
+
 import type {
   EventCallback,
   EventSourceEventType,
@@ -8,7 +10,8 @@ import type {
 } from '../types';
 
 interface EventSourceNativeModule extends NativeModule {
-  initialize(url: string, options: EventSourceHttpOptions): void;
+  connect(url: string, options: EventSourceHttpOptions): void;
+  disconnect(): void;
 }
 
 class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
@@ -26,6 +29,7 @@ class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
     close: [],
     error: [],
     suspend: [],
+    timeout: [],
   };
 
   constructor(
@@ -35,8 +39,9 @@ class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
       body = '',
       method = 'GET',
       timeout = 30 * 1000,
+      debug = false,
     }: EventSourceHttpOptions,
-    { debug }: EventSourceStreamOptions = {}
+    {}: EventSourceStreamOptions = {}
   ) {
     const nativeEvents: EventSourceEventType[] = [
       'open',
@@ -46,16 +51,20 @@ class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
     ];
 
     this.url = url;
+    this.debug = debug;
 
-    this.debug = debug ?? false;
-
-    this.nativeEventSource.initialize(url, { headers, body, method, timeout });
+    this.nativeEventSource.connect(url, {
+      headers,
+      body,
+      method,
+      timeout,
+      debug,
+    });
 
     nativeEvents.forEach((nativeEvent) => {
       this.eventEmitter.addListener(nativeEvent, (event) => {
-        this.log('received event from native', event);
         this.listeners[nativeEvent].forEach((listener) => {
-          listener({ type: nativeEvent, data: event.data, url: this.url });
+          listener({ type: nativeEvent, data: event.data, error: event.error });
         });
       });
     });
@@ -76,6 +85,10 @@ class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
 
   public removeEventListeners<E extends EventSourceEventType>(event: E): void {
     this.eventEmitter.removeAllListeners(event);
+  }
+
+  public disconnect(): void {
+    this.nativeEventSource.disconnect();
   }
 }
 
