@@ -95,7 +95,16 @@ dependencies {
   // For < 0.71, this will be from the local maven repo
   // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
   //noinspection GradleDynamicVersion
-  implementation "com.facebook.react:react-native:+"
+
+  implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+  implementation 'com.squareup.okhttp3:okhttp-sse:4.11.0'
+  testImplementation 'com.squareup.okhttp3:okhttp-sse:4.11.0'
+
+  // FIXME: Dev
+  implementation "com.facebook.react:react-android:0.71.3"
+  // FIXME: Deploy
+  // implementation "com.facebook.react:react-native:+"
+
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
