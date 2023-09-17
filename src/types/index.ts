@@ -14,14 +14,12 @@ export type EventSourceEvent =
   | TimeoutEvent
   | ErrorEvent
   | CloseEvent
-  | OpenEvent
-  | SuspendEvent;
+  | OpenEvent;
 
 /**
  * event that emitted when message event received
- * <T> should be typeof deserialized event data
  */
-export interface MessageEvent extends EventBase {
+export interface MessageEvent {
   type: 'message';
   data: string;
   lastEventId: string | null | undefined;
@@ -30,45 +28,41 @@ export interface MessageEvent extends EventBase {
 /**
  * event that emitted when timeout occurred before first message event
  */
-export interface TimeoutEvent extends EventBase {
+export interface TimeoutEvent {
   type: 'timeout';
 }
 
 /**
  * event that emitted when first message event received
  */
-export interface OpenEvent extends EventBase {
+export interface OpenEvent {
   type: 'open';
 }
 
 /**
  * event that emitted when connection closed
  */
-export interface CloseEvent extends EventBase {
+export interface CloseEvent {
   type: 'close';
 }
 
 /**
  * event that emitted when error occurred
  */
-export interface ErrorEvent extends EventBase {
+export interface ErrorEvent {
   type: 'error';
-  data: string;
-  message: string;
-  statusCode: number;
+  data: unknown;
+  message: string | null | undefined;
+  statusCode: number | null | undefined;
 }
 
 /**
+ * TODO: idle
  * event that emitted when no message event for a while
- * @see {@link EventSourceOptions.suspend}
  */
-export interface SuspendEvent extends EventBase {
-  type: 'suspend';
-}
-
-export interface EventBase {
-  type: string;
-}
+// export interface IdleEvent {
+//   type: 'idle';
+// }
 
 export type HttpMethod = 'GET' | 'POST';
 
@@ -82,6 +76,4 @@ export type EventSourceHttpOptions = {
 
 export type EventSourceStreamOptions = {
   speed?: number;
-  suspendThresholds?: number;
-  shouldMergeSameEvent?: boolean;
 };

@@ -22,9 +22,9 @@ const nativeEvents: EventSourceEventType[] = [
 ];
 
 class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
-  protected nativeEventSource = requireNativeModule<T>('EventSource');
+  private nativeEventSource = requireNativeModule<T>('EventSource');
 
-  protected eventEmitter = new NativeEventEmitter(
+  private eventEmitter = new NativeEventEmitter(
     Platform.select({
       ios: requireNativeModule('RNEventEmitter'),
       default: undefined,
@@ -50,7 +50,7 @@ class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
       method = 'GET',
       timeout = 30 * 1000,
       debug = false,
-    }: EventSourceHttpOptions,
+    }: EventSourceHttpOptions = {},
     {}: EventSourceStreamOptions = {}
   ) {
     this.debug = debug;
@@ -72,9 +72,9 @@ class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
     });
   }
 
-  protected log(...args: any) {
+  private log(...args: any) {
     if (this.debug) {
-      console.log(`[EventSource]`, ...args);
+      console.log(`[react-native-event-source]`, ...args);
     }
   }
 
@@ -95,7 +95,8 @@ class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
     });
   }
 
-  public disconnect(): void {
+  public close(): void {
+    this.removeAllEventListeners();
     this.nativeEventSource.disconnect();
   }
 }

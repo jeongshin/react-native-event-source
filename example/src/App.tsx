@@ -23,8 +23,7 @@ export default function App() {
         },
         debug: true,
         timeout: 5 * 1000,
-      },
-      {}
+      }
     );
 
     es.current.addEventListener('open', (e) => {
@@ -39,18 +38,18 @@ export default function App() {
       }
 
       if ('end' in data) {
-        es.current?.disconnect();
+        es.current?.close();
       }
     });
 
     es.current.addEventListener('error', (e) => {
       console.log(e);
-      es.current?.disconnect();
+      es.current?.close();
     });
 
     return () => {
       es.current?.removeAllEventListeners();
-      es.current?.disconnect();
+      es.current?.close();
     };
   }, []);
 
