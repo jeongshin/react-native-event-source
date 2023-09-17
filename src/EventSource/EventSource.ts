@@ -14,11 +14,21 @@ interface EventSourceNativeModule extends NativeModule {
   disconnect(): void;
 }
 
+const nativeEvents: EventSourceEventType[] = [
+  'open',
+  'message',
+  'error',
+  'close',
+];
+
 class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
-  protected nativeEventSource = requireNativeModule<T>();
+  protected nativeEventSource = requireNativeModule<T>('EventSource');
 
   protected eventEmitter = new NativeEventEmitter(
-    Platform.OS === 'ios' ? this.nativeEventSource : undefined
+    Platform.select({
+      ios: requireNativeModule('RNEventEmitter'),
+      default: undefined,
+    })
   );
 
   private url: string;
@@ -38,20 +48,13 @@ class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
     url: string,
     {
       headers = {},
-      body = '',
+      body = {},
       method = 'GET',
       timeout = 30 * 1000,
       debug = false,
     }: EventSourceHttpOptions,
     {}: EventSourceStreamOptions = {}
   ) {
-    const nativeEvents: EventSourceEventType[] = [
-      'open',
-      'message',
-      'error',
-      'close',
-    ];
-
     this.url = url;
     this.debug = debug;
 
@@ -89,6 +92,12 @@ class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
     this.eventEmitter.removeAllListeners(event);
   }
 
+  public removeAllEventListeners(): void {
+    nativeEvents.forEach((nativeEvent) => {
+      this.eventEmitter.removeAllListeners(nativeEvent);
+    });
+  }
+
   public disconnect(): void {
     this.nativeEventSource.disconnect();
   }
@@ -100,9 +109,11 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
-function requireNativeModule<T>(): T {
-  return NativeModules.EventSource
-    ? NativeModules.EventSource
+function requireNativeModule<T>(
+  moduleName: 'EventSource' | 'RNEventEmitter'
+): T {
+  return NativeModules[moduleName]
+    ? NativeModules[moduleName]
     : new Proxy(
         {},
         {

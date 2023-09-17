@@ -35,8 +35,31 @@ app.get('/stream', (req, res) => {
     .pipe(concatMap((x) => of(x).pipe(delay(500))))
     .subscribe((message) => {
       res.write(
-        `id: ${new Date().getTime()}
-        data: ${JSON.stringify({
+        `id: ${new Date().getTime()}\ndata: ${JSON.stringify({
+          chunk: message,
+        })}\n\n`
+      );
+
+      if (messages.findIndex((x) => x === message) === messages.length - 1) {
+        res.write(`data: ${JSON.stringify({ end: '[DONE]' })}\n\n`);
+      }
+    });
+
+  req.on('close', () => {
+    console.log('closed connection from client 💥');
+  });
+});
+
+app.post('/stream', (req, res) => {
+  res.writeHead(201, headers);
+
+  console.log('request body from client', req.body, req.headers);
+
+  from(messages)
+    .pipe(concatMap((x) => of(x).pipe(delay(500))))
+    .subscribe((message) => {
+      res.write(
+        `id: ${new Date().getTime()}\ndata: ${JSON.stringify({
           chunk: message,
         })}\n\n`
       );
