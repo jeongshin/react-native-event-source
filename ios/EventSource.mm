@@ -1,14 +1,21 @@
 #import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
 
 @interface RCT_EXTERN_MODULE(EventSource, NSObject)
+    RCT_EXTERN_METHOD(connect:(NSString *)url options:(NSDictionary *)options)
+    RCT_EXTERN_METHOD(disconnect)
 
-RCT_EXTERN_METHOD(multiply:(float)a withB:(float)b
-                 withResolver:(RCTPromiseResolveBlock)resolve
-                 withRejecter:(RCTPromiseRejectBlock)reject)
+    + (BOOL)requiresMainQueueSetup
+    {
+        return NO;
+    }
+@end
 
-+ (BOOL)requiresMainQueueSetup
-{
-  return NO;
-}
+@interface RCT_EXTERN_MODULE(RNEventEmitter, RCTEventEmitter)
+    RCT_EXTERN_METHOD(supportedEvents)
 
+    + (BOOL)requiresMainQueueSetup
+    {
+        return NO;
+    }
 @end

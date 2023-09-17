@@ -4,6 +4,7 @@ export type EventSourceEventType =
   | 'error'
   | 'message'
   | 'timeout'
+  // FIXME: rename suspend to idle
   | 'suspend';
 
 export type EventCallback = (data: EventSourceEvent) => void;
@@ -23,6 +24,7 @@ export type EventSourceEvent =
 export interface MessageEvent extends EventBase {
   type: 'message';
   data: string;
+  lastEventId: string | null | undefined;
 }
 
 /**
@@ -73,7 +75,7 @@ export type HttpMethod = 'GET' | 'POST';
 export type EventSourceHttpOptions = {
   method?: HttpMethod;
   headers?: Record<string, string>;
-  body?: string;
+  body?: Record<string, string>;
   timeout?: number;
   debug?: boolean;
 };

@@ -10,15 +10,17 @@ export default function App() {
 
   React.useEffect(() => {
     es.current = new EventSource(
-      'https://4f9b-175-113-78-217.ngrok.io/stream/timeout',
+      'https://cd8f-175-113-78-217.ngrok.io/stream',
       {
-        method: 'GET',
+        method: 'POST',
         headers: {
-          Authorization: `Bearer hello`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer hello`,
         },
-        body: JSON.stringify({
+        body: {
           message: '안녕',
-        }),
+        },
         debug: true,
         timeout: 5 * 1000,
       },
@@ -31,8 +33,8 @@ export default function App() {
 
     es.current.addEventListener('message', (e) => {
       const data = JSON.parse(e.data);
-      console.log(data, new Date().getTime());
-      if ('chunk' in data) {
+
+      if ('chunk' in data && data.chunk) {
         setResult((p) => p + data.chunk);
       }
 
@@ -45,6 +47,11 @@ export default function App() {
       console.log(e);
       es.current?.disconnect();
     });
+
+    return () => {
+      es.current?.removeAllEventListeners();
+      es.current?.disconnect();
+    };
   }, []);
 
   return (
@@ -59,6 +66,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'white',
   },
   box: {
     width: 60,
