@@ -4,6 +4,7 @@ import { NativeEventEmitter, NativeModules, Platform } from 'react-native';
 
 import type {
   EventCallback,
+  EventSourceEvent,
   EventSourceEventType,
   EventSourceHttpOptions,
   EventSourceStreamOptions,
@@ -21,8 +22,9 @@ const nativeEvents: EventSourceEventType[] = [
   'close',
 ];
 
-class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
-  private nativeEventSource = requireNativeModule<T>('EventSource');
+class EventSource {
+  private nativeEventSource =
+    requireNativeModule<EventSourceNativeModule>('EventSource');
 
   private eventEmitter = new NativeEventEmitter(
     Platform.select({
@@ -70,6 +72,8 @@ class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
         });
       });
     });
+
+    this.log(`connected to ${url}`);
   }
 
   private log(...args: any) {
@@ -80,7 +84,7 @@ class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
 
   public addEventListener<E extends EventSourceEventType>(
     event: E,
-    listener: (...args: any[]) => void
+    listener: (e: Extract<EventSourceEvent, { type: E }>) => void
   ): EmitterSubscription {
     return this.eventEmitter.addListener(event, listener);
   }
