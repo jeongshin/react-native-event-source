@@ -31,8 +31,6 @@ class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
     })
   );
 
-  private url: string;
-
   private debug: boolean;
 
   private listeners: Record<EventSourceEventType, EventCallback[]> = {
@@ -55,7 +53,6 @@ class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
     }: EventSourceHttpOptions,
     {}: EventSourceStreamOptions = {}
   ) {
-    this.url = url;
     this.debug = debug;
 
     this.nativeEventSource.connect(url, {
