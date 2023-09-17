@@ -3,16 +3,16 @@ import LDSwiftEventSource
 
 @objc(EventSource)
 class EventSource: NSObject {
-    private var _connceted: Bool = false
+    private var _connected: Bool = false
     private var _eventsource: LDSwiftEventSource.EventSource?
     
     @objc(connect:options:)
     func connect(url: String, options: NSObject) -> Void {
-        if (self._connceted) {
+        if (self._connected) {
             self.disconnect()
         }
         
-        self._connceted = true
+        self._connected = true
         
         let config = EventConfigBuilder().build(url: url, options: options)
 
@@ -29,19 +29,8 @@ class EventSource: NSObject {
     
     @objc(disconnect)
     func disconnect() -> Void {
-        self._connceted = false
+        self._connected = false
         self._eventsource?.stop()
-    }
-    
-    
-    
-    func log(message: String) -> Void {
-        // TODO: log to rn
-        // RCTLogInfo("[react-native-event-source] \(message)")
-    }
-    
-    func warn(message: String) -> Void {
-        // TODO: log to rn
     }
 }
 
