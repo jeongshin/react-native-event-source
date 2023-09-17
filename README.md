@@ -16,10 +16,10 @@ iOS - [swift eventsource](https://github.com/launchdarkly/swift-eventsource)
 
 ```sh
 // using yarn
-yarn add react-native-event-source
+yarn add @jeongshin/react-native-event-source
 
 // using npm
-npm install react-native-event-source
+npm install @jeongshin/react-native-event-source
 ```
 
 ### Android
@@ -37,7 +37,31 @@ dependencies {
 ## Usage
 
 ```js
+useEffect(() => {
+  const eventSource = new EventSource('http://localhost:3000/stream');
 
+  eventSource.addEventListener('open', (e) => {
+    console.log(e);
+  });
+
+  eventSource.addEventListener('message', (e) => {
+    const data = JSON.parse(e.data);
+
+    if ('chunk' in data && data.chunk) {
+      setResult((p) => p + data.chunk);
+    }
+  });
+
+  eventSource.addEventListener('error', (e) => {
+    console.log(e);
+    eventSource.disconnect();
+  });
+
+  return () => {
+    eventSource.removeAllEventListeners();
+    eventSource.disconnect();
+  };
+}, []);
 ```
 
 ## Contributing
