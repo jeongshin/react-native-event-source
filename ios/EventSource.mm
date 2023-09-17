@@ -2,9 +2,8 @@
 
 @interface RCT_EXTERN_MODULE(EventSource, NSObject)
 
-RCT_EXTERN_METHOD(multiply:(float)a withB:(float)b
-                 withResolver:(RCTPromiseResolveBlock)resolve
-                 withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(connect:(NSString *)url options:(NSDictionary *)options)
+RCT_EXTERN_METHOD(disconnect)
 
 + (BOOL)requiresMainQueueSetup
 {

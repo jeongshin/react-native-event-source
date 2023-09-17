@@ -73,7 +73,7 @@ export type HttpMethod = 'GET' | 'POST';
 export type EventSourceHttpOptions = {
   method?: HttpMethod;
   headers?: Record<string, string>;
-  body?: string;
+  body?: Record<string, string>;
   timeout?: number;
   debug?: boolean;
 };

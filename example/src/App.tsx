@@ -10,15 +10,15 @@ export default function App() {
 
   React.useEffect(() => {
     es.current = new EventSource(
-      'https://4f9b-175-113-78-217.ngrok.io/stream/timeout',
+      'https://793c-175-113-78-217.ngrok.io/stream',
       {
         method: 'GET',
         headers: {
           Authorization: `Bearer hello`,
         },
-        body: JSON.stringify({
+        body: {
           message: '안녕',
-        }),
+        },
         debug: true,
         timeout: 5 * 1000,
       },

@@ -17,7 +17,9 @@ interface EventSourceNativeModule extends NativeModule {
 class EventSource<T extends EventSourceNativeModule = EventSourceNativeModule> {
   protected nativeEventSource = requireNativeModule<T>();
 
-  protected eventEmitter = new NativeEventEmitter();
+  protected eventEmitter = new NativeEventEmitter(
+    Platform.OS === 'ios' ? this.nativeEventSource : undefined
+  );
 
   private url: string;
 
