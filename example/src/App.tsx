@@ -10,7 +10,7 @@ export default function App() {
 
   React.useEffect(() => {
     es.current = new EventSource(
-      'https://cd8f-175-113-78-217.ngrok.io/stream',
+      'https://4b5f-175-113-78-217.ngrok.io/stream',
       {
         method: 'POST',
         headers: {
@@ -32,11 +32,9 @@ export default function App() {
 
     es.current.addEventListener('message', (e) => {
       const data = JSON.parse(e.data);
-
       if ('chunk' in data && data.chunk) {
         setResult((p) => p + data.chunk);
       }
-
       if ('end' in data) {
         es.current?.close();
       }

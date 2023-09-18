@@ -15,8 +15,9 @@ import okhttp3.sse.EventSourceListener
 import okhttp3.sse.EventSources
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.bridge.Arguments
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.net.SocketTimeoutException
 
 enum class EventType(val value: String) {
@@ -56,17 +57,17 @@ class EventSourceModule(reactContext: ReactApplicationContext) :
 
     this.connected = true;
 
-    var request = Request.Builder()
+    val request = Request.Builder()
       .url(url)
       .header("Content-Type", "application/json")
       .addHeader("Accept", "text/event-source")
       .addHeader("Accept", "application/json")
 
     this.debug = if (options.hasKey("debug")) options.getBoolean("debug") else false
-    var timeout = if (options.hasKey("timeout")) options.getInt("timeout") else 30 * 1000
-    var headers = if (options.hasKey("headers")) options.getMap("headers")?.toHashMap() else HashMap()
-    var method = if (options.hasKey("method")) options.getString("method") ?: "GET" else "GET"
-    var body = if (options.hasKey("body")) options.getString("body") ?: "" else ""
+    val timeout = if (options.hasKey("timeout")) options.getInt("timeout") else 30 * 1000
+    val headers = if (options.hasKey("headers")) options.getMap("headers")?.toHashMap() else HashMap()
+    val method = if (options.hasKey("method")) options.getString("method") ?: "GET" else "GET"
+    val body = if (options.hasKey("body")) options.getMap("body")?. toHashMap() else HashMap()
 
     // init httpClient
     this.httpClient = OkHttpClient.Builder()
@@ -86,7 +87,9 @@ class EventSourceModule(reactContext: ReactApplicationContext) :
     this.log("method $method timeout ${timeout.toLong()} headers $headers url $url")
 
     if (method == "POST") {
-      request.post(body.toRequestBody("application/json".toMediaTypeOrNull()))
+      val mediaType = "application/json; charset=utf-8".toMediaType()
+      val requestBody = body?.let { JSONObject(it).toString().toRequestBody(mediaType) }
+      request.method("POST", requestBody)
     } else if (method == "GET")  {
       request.get()
     } else {
