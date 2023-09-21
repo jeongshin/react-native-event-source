@@ -37,7 +37,7 @@ class EventSource: NSObject {
 class EventConfigBuilder {
     public func build(url: String, options: NSObject) -> LDSwiftEventSource.EventSource.Config {
         let method = (options.value(forKey: "method") as? String) ?? "GET"
-        let body = (options.value(forKey: "body") as? Dictionary) ?? Dictionary<String, String>()
+        let body = (options.value(forKey: "body") as? NSDictionary) ?? NSDictionary()
         
         var config = LDSwiftEventSource.EventSource.Config(
             handler: EventHandler(),
@@ -48,9 +48,6 @@ class EventConfigBuilder {
         config.headers = options.value(forKey: "headers") as? Dictionary ?? Dictionary<String, String>()
         config.lastEventId = options.value(forKey: "lastEventId") as? String ?? ""
         
-        config.reconnectTime = 300000000
-        config.maxReconnectTime = 300000000
-        
         config.idleTimeout = 60
         
         if (method == "POST") {
@@ -60,18 +57,6 @@ class EventConfigBuilder {
         return config;
     }
 }
-
-//class ConnectionErrorHandler {
-//    func handler(error: Error) -> LDSwiftEventSource.ConnectionErrorAction {
-//        guard let unsuccessfulResponseError = error as? UnsuccessfulResponseError else { return .proceed }
-//
-//        let responseCode: Int = unsuccessfulResponseError.responseCode
-//        if 204 == responseCode {
-//            return .shutdown
-//        }
-//        return .proceed
-//    }
-//}
 
 class EventHandler: LDSwiftEventSource.EventHandler
 {
@@ -101,21 +86,6 @@ class EventHandler: LDSwiftEventSource.EventHandler
 
     func onError(error: Error) {
         print("[rnsse] error")
-        guard let unsuccessfulResponseError = error as? UnsuccessfulResponseError else {
-            return
-        }
-        
-        guard let data = unsuccessfulResponseError.response.url?.dataRepresentation as Data? else {
-            print("no data")
-            return
-        }
-        
-        
-        if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] {
-            print("json", json)
-        }
-        
-        print("no json", data)
         
         // TODO: api error
         self.sendEvent(event: EventType.ERROR, data: [:])
