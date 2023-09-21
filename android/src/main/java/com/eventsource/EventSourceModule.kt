@@ -52,7 +52,7 @@ class EventSourceModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun connect(url: String, options: ReadableMap) {
     if (this.connected) {
-      throw RuntimeException("[react-native-event-source] only single connection can be made\nplease disconnect before create new connection")
+      throw RuntimeException("[@wrtn/sse-native] only single connection can be made\nplease disconnect before create new connection")
     }
 
     this.connected = true;
@@ -93,7 +93,7 @@ class EventSourceModule(reactContext: ReactApplicationContext) :
     } else if (method == "GET")  {
       request.get()
     } else {
-      throw RuntimeException("[react-native-event-source] method should be GET or POST")
+      throw RuntimeException("[@wrtn/sse-native] method should be GET or POST")
     }
 
     val listeners = object : EventSourceListener() {
@@ -185,7 +185,7 @@ class EventSourceModule(reactContext: ReactApplicationContext) :
 
   private fun log(msg: String) {
     if (this.debug) {
-      println("[react-native-event-source] $msg")
+      println("[@wrtn/sse-native] $msg")
     }
   }
 

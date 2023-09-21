@@ -1,3 +1,3 @@
-import EventSource from './EventSource/EventSource';
+import NativeEventSource from './NativeEventSource';
 
-export default EventSource;
+export default NativeEventSource;

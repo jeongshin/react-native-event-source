@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import EventSource from 'react-native-event-source';
+import EventSource from '@wrtn/sse-native';
 
 export default function App() {
   const es = React.useRef<EventSource | null>(null);
@@ -9,22 +9,16 @@ export default function App() {
   const [result, setResult] = React.useState<string>('');
 
   React.useEffect(() => {
-    es.current = new EventSource(
-      'https://4b5f-175-113-78-217.ngrok.io/stream',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': `Bearer hello`,
-        },
-        body: {
-          message: '안녕',
-        },
-        debug: true,
-        timeout: 5 * 1000,
-      }
-    );
+    es.current = new EventSource('http://localhost:3000/stream', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer hello`,
+      },
+      debug: true,
+      timeout: 5 * 1000,
+    });
 
     es.current.addEventListener('open', (e) => {
       console.log(e);
@@ -42,11 +36,12 @@ export default function App() {
 
     es.current.addEventListener('error', (e) => {
       console.log(e);
-      es.current?.close();
     });
 
+    es.current.open();
+
     return () => {
-      es.current?.removeAllEventListeners();
+      es.current?.removeEventListeners();
       es.current?.close();
     };
   }, []);

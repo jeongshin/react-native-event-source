@@ -1,6 +1,6 @@
 {
-  "name": "react-native-event-source",
-  "version": "0.1.0",
+  "name": "@wrtn/sse-native",
+  "version": "0.0.1",
   "description": "Server sent events handling for react native apps",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -43,13 +43,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/jeongshin/react-native-event-source",
+  "repository": "https://github.com/wrtn/sse-native",
   "author": "jeongshin <sjeong1127@gmail.com> (https://github.com/jeongshin)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jeongshin/react-native-event-source/issues"
+    "url": "https://github.com/wrtn/sse-native/issues"
   },
-  "homepage": "https://github.com/jeongshin/react-native-event-source#readme",
+  "homepage": "https://github.com/wrtn/sse-native#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
@@ -159,5 +159,8 @@
         }
       ]
     ]
+  },
+  "dependencies": {
+    "@wrtn/sse-types": "^0.0.1"
   }
 }
